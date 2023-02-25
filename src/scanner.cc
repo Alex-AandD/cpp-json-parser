@@ -52,7 +52,10 @@ void Scanner::scan()
         case '}': pushSimple(Tokentype::RBR); break;
         case ',': pushSimple(Tokentype::COMA); break;
         case ':': pushSimple(Tokentype::SEMI); break;
-        case '"': advance(); pushString(); break;
+        case '"': {
+            pushString(); 
+            break;
+        }
         case 't': pushTrue(); break;
         case 'f': pushFalse(); break;
         case 'n': pushNull(); break;
@@ -75,8 +78,9 @@ void Scanner::pushSimple(Tokentype t) {
 
 void Scanner::pushString()
 {
+    advance();
     std::string finalString;
-    while(!atEnd() && !matchCurr('"')) {
+    while((!atEnd()) && (!matchCurr('"'))) {
         finalString += input[curr]; 
         advance();
     }
@@ -94,16 +98,15 @@ void Scanner::pushString()
 void Scanner::pushTrue()
 { 
     advance();
-    if(atEnd() || !matchCurr('r')) {
+    if(!atEnd() && !matchCurr('r')) {
         throw("expected true");
     }
 
-    advance();
-    if (atEnd() || !matchCurr('u')) {
+    if (!atEnd() && !matchCurr('u')) {
         throw("expected true");
     }
-    advance();
-    if (atEnd() || !matchCurr('e')) {
+
+    if (!atEnd() && !matchCurr('e')) {
         throw("expected true");
     }
 
@@ -113,22 +116,19 @@ void Scanner::pushTrue()
 void Scanner::pushFalse()
 {    
     advance();
-    if(atEnd() || !matchCurr('a')) {
+    if(!atEnd() && !matchCurr('a')) {
         throw("expected false");
     }
 
-    advance();
-    if (atEnd() || !matchCurr('l')) {
+    if (!atEnd() && !matchCurr('l')) {
         throw("expected false");
     }
 
-    advance();
-    if (atEnd() || !matchCurr('s')) {
+    if (!atEnd() && !matchCurr('s')) {
         throw("expected false");
     }
 
-    advance();
-    if (atEnd() || !matchCurr('e')) {
+    if (!atEnd() && !matchCurr('e')) {
         throw("expected true");
     }
 
@@ -138,15 +138,15 @@ void Scanner::pushFalse()
 void Scanner::pushNull()
 {
     advance();
-    if(atEnd() || !matchCurr('u')) {
+    if(!atEnd() && !matchCurr('u')) {
         throw("expected null");
     }
-    advance();
-    if(atEnd() || !matchCurr('l')) {
+
+    if(!atEnd() && !matchCurr('l')) {
         throw("expected null");
     }
-    advance();
-    if(atEnd() || !matchCurr('l')) {
+
+    if(!atEnd() && !matchCurr('l')) {
         throw("expected null");
     }
 }
