@@ -2,8 +2,11 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include <unordered_map>
 #include "token.hh"
+
+namespace Json {
 
 class Value;
 class StringValue;
@@ -23,19 +26,20 @@ private:
     std::vector<std::string> lexemes;
 public:
     Parser(std::vector<Token>& tok, std::vector<std::string>&);
-    ObjectValue* parse();
+    std::unique_ptr<ObjectValue> parse();
 private:
     std::string parseKey();
-    Value* parseValue();
 
-    StringValue* parseString();
-    IntValue* parseInt(bool isPos);
-    FloatValue* parseFloat(bool isPos);
-    BoolValue* parseTrue();
-    BoolValue* parseFalse();
-    NullValue* parseNull();
-    ListValue* parseList();
-    ObjectValue* parseObj();
+    std::unique_ptr<Value> parseValue();
+    std::unique_ptr<StringValue> parseString();
+    std::unique_ptr<IntValue> parseInt(bool isPos);
+    std::unique_ptr<FloatValue> parseFloat(bool isPos);
+    std::unique_ptr<BoolValue> parseTrue();
+    std::unique_ptr<BoolValue> parseFalse();
+    std::unique_ptr<NullValue> parseNull();
+    std::unique_ptr<ListValue> parseList();
+    std::unique_ptr<ObjectValue> parseObj();
 
     bool matchCurr(Tokentype) noexcept;
 };
+}

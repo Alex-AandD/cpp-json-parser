@@ -2,6 +2,7 @@
 #include "value.hh"
 #include <iostream>
 
+namespace Json {
 Parser::Parser(std::vector<Token>& t, std::vector<std::string>& l)
     : tokens(t), lexemes(l), currTok(0), currLex(0)
 {
@@ -18,14 +19,14 @@ bool Parser::matchCurr(Tokentype t) noexcept {
     return false;
 }
 
-ObjectValue* Parser::parse()
+std::unique_ptr<ObjectValue> Parser::parse()
 {
     return parseObj();
 }
 
-ObjectValue* Parser::parseObj()
+std::unique_ptr<ObjectValue> Parser::parseObj()
 {
-    std::unordered_map<std::string, Value*> map;
+    std::unordered_map<std::string, std::unique_ptr<Value>> map;
     if (matchCurr(Tokentype::LBR))
     {
         do {
@@ -34,16 +35,16 @@ ObjectValue* Parser::parseObj()
             {
                 throw("missing semicolon");
             }
-            Value* val = parseValue();
+            std::unique_ptr<Value> val = parseValue();
 
             // insert key and value into the object
-            map[key] = val;
+            map[key] = std::move(val);
         } while(matchCurr(Tokentype::COMA));
     }
 
     if (matchCurr(Tokentype::RBR))
     {
-        return new ObjectValue(map);
+        return std::make_unique<ObjectValue>(map);
     }
     throw("missing closing bracket");
 }
@@ -60,10 +61,9 @@ std::string Parser::parseKey()
     throw("invalid key");
 }
 
-Value* Parser::parseValue()
+std::unique_ptr<Value> Parser::parseValue()
 {
     using enum Tokentype;
-    std::cout << tokens[currTok].toString() << '\n';
     switch (tokens[currTok].t)
     {
     case STRING: {
@@ -110,59 +110,61 @@ Value* Parser::parseValue()
     return nullptr;
 }
 
-StringValue* Parser::parseString()
+std::unique_ptr<StringValue> Parser::parseString()
 {
-    StringValue* v = new StringValue(lexemes[currLex]);
+    auto v = std::make_unique<StringValue>(lexemes[currLex]);
     currLex++;
     return v;
 }
 
-IntValue* Parser::parseInt(bool isPos)
+std::unique_ptr<IntValue> Parser::parseInt(bool isPos)
 {
-    IntValue* v = isPos
-        ? new IntValue(std::stoi(lexemes[currLex]))
-        : new IntValue(std::stoi(lexemes[currLex]));
+    auto v = isPos
+        ? std::make_unique<IntValue>(std::stoi(lexemes[currLex]))
+        : std::make_unique<IntValue>(std::stoi(lexemes[currLex]));
     currLex++;
     return v;
 }
 
-FloatValue* Parser::parseFloat(bool isPos)
+std::unique_ptr<FloatValue> Parser::parseFloat(bool isPos)
 {
-    FloatValue* v = isPos
-        ? new FloatValue(std::stof(lexemes[currLex])) 
-        : new FloatValue(-std::stof(lexemes[currLex]));
+    auto v = isPos
+        ? std::make_unique<FloatValue>(std::stof(lexemes[currLex]))
+        : std::make_unique<FloatValue>(-std::stof(lexemes[currLex]));
     currLex++;
     return v;
 }
 
-BoolValue* Parser::parseTrue()
+std::unique_ptr<BoolValue> Parser::parseTrue()
 {
-    BoolValue* v = new BoolValue(true);
+    auto v = std::make_unique<BoolValue>(true);
     return v;
 }
 
-BoolValue* Parser::parseFalse()
+std::unique_ptr<BoolValue> Parser::parseFalse()
 {
-    BoolValue* v = new BoolValue(false);
+    auto v = std::make_unique<BoolValue>(false);
     return v;
 }
 
-NullValue* Parser::parseNull()
+std::unique_ptr<NullValue> Parser::parseNull()
 {
-    NullValue* v = new NullValue();
+    auto v = std::make_unique<NullValue>();
     return v;
 }
 
-ListValue* Parser::parseList()
+std::unique_ptr<ListValue> Parser::parseList()
 {
-    std::vector<Value*> values;
+    std::vector<std::unique_ptr<Value>> values;
     do {
-        Value* v = parseValue();
-        values.push_back(v);
+        std::unique_ptr<Value> v = parseValue();
+        values.push_back(std::move(v));
     } while(matchCurr(Tokentype::COMA));
     if (matchCurr(Tokentype::RSQ))
     {
-        return new ListValue(values);
+        return std::make_unique<ListValue>(values);
     }
     throw("missing closing bracket");
+}
+
 }

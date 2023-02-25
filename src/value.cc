@@ -1,17 +1,16 @@
 #include "value.hh"
 #include <iostream>
 
+namespace Json {
 Value::Value() { }
 Value::~Value() { }
 void Value::print() { }
 
 StringValue::StringValue(std::string s): v(s)
 {
-
 }
 StringValue::~StringValue()
 {
-
 }
 void StringValue::print()
 {
@@ -44,7 +43,7 @@ void BoolValue::print()
     std::cout << v;
 }
 
-ListValue::ListValue(std::vector<Value*> l): v(l)
+ListValue::ListValue(std::vector<std::unique_ptr<Value>>& l): v(std::move(l))
 {
 }
 ListValue::~ListValue()
@@ -62,7 +61,7 @@ void ListValue::print()
     std::cout << ']';
 }
 
-ObjectValue::ObjectValue(std::unordered_map<std::string, Value*>& m): map(m)
+ObjectValue::ObjectValue(std::unordered_map<std::string, std::unique_ptr<Value>>& m): map(std::move(m))
 {
 }
 ObjectValue::~ObjectValue()
@@ -87,7 +86,6 @@ NullValue::NullValue()
 
 NullValue::~NullValue()
 {
-
 }
 void NullValue::print()
 {
@@ -96,14 +94,15 @@ void NullValue::print()
 
 FloatValue::FloatValue(float f): v(f)
 {
-
 }
 
 FloatValue::~FloatValue()
 {
-
 }
+
 void FloatValue::print()
 {
     std::cout << v;
+}
+
 }

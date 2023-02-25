@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_map>
 
+namespace Json {
+
 class Value {
 public:
     Value();
@@ -33,19 +35,19 @@ public:
 class ListValue : public Value
 {
 public:
-    ListValue(std::vector<Value*>);
+    ListValue(std::vector<std::unique_ptr<Value>>&);
     ~ListValue();
     void print();
 public:
-    std::vector<Value*> v;
+    std::vector<std::unique_ptr<Value>> v;
 };
 
 class ObjectValue : public Value
 {
 public:
-    std::unordered_map<std::string, Value*> map;
+    std::unordered_map<std::string, std::unique_ptr<Value>> map;
 public:
-    ObjectValue(std::unordered_map<std::string, Value*>&);
+    ObjectValue(std::unordered_map<std::string, std::unique_ptr<Value>>&);
     ~ObjectValue();
     void print();
 };
@@ -77,3 +79,5 @@ public:
     ~NullValue();
     void print();
 };
+
+}

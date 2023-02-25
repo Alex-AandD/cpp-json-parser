@@ -2,6 +2,8 @@
 #include "token.hh"
 #include <iostream>
 
+namespace Json {
+
 Scanner::Scanner(std::string _input): input(_input), curr(0)
 {
 
@@ -197,4 +199,6 @@ void Scanner::printTokens() noexcept
     {
         std::cout << tok.toString() << " :: ";
     }
+}
+
 }

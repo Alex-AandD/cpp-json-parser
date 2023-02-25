@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+namespace Json {
 enum class Tokentype {
     LBR,
     RBR,
@@ -25,3 +26,4 @@ public:
     Token(Tokentype t);
     [[nodiscard]] std::string toString() noexcept;
 };
+}

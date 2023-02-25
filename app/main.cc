@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 
+using namespace Json;
 int main()
 {
     std::string s = "{" 
@@ -30,7 +31,7 @@ int main()
 
     Parser parser = Parser(tokens, lexemes);
     try {
-        ObjectValue* json = parser.parse();
+        auto json = parser.parse();
         json->print();
     } catch(const char* err) {
         std::cout << err << '\n';

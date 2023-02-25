@@ -3,6 +3,8 @@
 #include <vector>
 #include "token.hh"
 
+namespace Json {
+
 class Scanner {
 private:
     size_t curr;
@@ -31,3 +33,4 @@ public:
     void printLexemes() noexcept;
     void printTokens() noexcept;
 };
+}

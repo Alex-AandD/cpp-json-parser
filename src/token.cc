@@ -1,5 +1,7 @@
 #include "token.hh"
 
+namespace Json {
+
 Token::Token(Tokentype _t): t(_t) { }
 std::string Token::toString() noexcept
 {
@@ -22,4 +24,6 @@ std::string Token::toString() noexcept
         case SEMI: return "SEMI";
         default: return "UNKNOWN";
     }
+}
+
 }
