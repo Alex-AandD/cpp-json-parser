@@ -80,6 +80,11 @@ void ObjectValue::print()
     std::cout << "}\n";
 }
 
+std::unique_ptr<Value> ObjectValue::get(std::string k)
+{
+    return std::move(map[k]);
+}
+
 NullValue::NullValue()
 {
 }

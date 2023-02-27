@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Define the library
 add_library(JsonLib SHARED 
+    src/json.cc
     src/parser.cc
     src/scanner.cc
     src/token.cc

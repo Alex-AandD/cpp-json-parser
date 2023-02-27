@@ -50,6 +50,7 @@ public:
     ObjectValue(std::unordered_map<std::string, std::unique_ptr<Value>>&);
     ~ObjectValue();
     void print();
+    std::unique_ptr<Value> get(std::string k);
 };
 
 class IntValue : public Value

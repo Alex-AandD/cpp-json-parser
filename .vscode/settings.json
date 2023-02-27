@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.code-workspace": "Untitled-1.cpp",
+        "*.json": "cpp",
+        "*.py ": "python",
+        "array": "cpp",
+        "istream": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "__functional_base": "cpp",
+        "utility": "cpp"
+    }
+}
